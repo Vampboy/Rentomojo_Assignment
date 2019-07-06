@@ -15,7 +15,6 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(
     session({
-        key: "userID",
         secret: "SECRET",
         resave: false,
         saveUninitialized: false,
@@ -32,6 +31,8 @@ app.listen(port, () => {
 
 // Route Imports
 const authRoutes = require("./routes/auth.route");
+const postRoutes = require("./routes/post.route");
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/post", postRoutes);

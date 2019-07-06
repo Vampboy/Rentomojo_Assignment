@@ -10,26 +10,24 @@ module.exports.postVote = (req, res) => {
                 if (vote == "u" || vote == "U") {
                     Vote.findOne({
                         where: {
-                            $and: [
-                                { posted_by: req.user.id },
-                                { posted_for: commentID }
-                            ]
+                            voted_by: req.user.id,
+                            voted_for: commentID
                         }
                     })
-                        .then(result => {
-                            if (!result) {
+                        .then(voted => {
+                            if (!voted) {
                                 Comment.update(
                                     { upvotes: result.upvotes + 1 },
                                     { where: { id: commentID } }
                                 )
-                                    .then(result => {
+                                    .then(upvoted => {
                                         Vote.create({
-                                            upvote: 1,
-                                            downvote: 0,
+                                            upvote: "1",
+                                            downvote: "0",
                                             voted_by: req.user.id,
                                             voted_for: commentID
                                         })
-                                            .then(result =>
+                                            .then(upvote =>
                                                 res.json({
                                                     message: "Upvoted!"
                                                 })
@@ -38,33 +36,31 @@ module.exports.postVote = (req, res) => {
                                     })
                                     .catch(error => res.send(error));
                             } else {
-                                res.json({ message: "Already Upvoted!" });
+                                res.json({ message: "Already Voted!" });
                             }
                         })
-                        .catch(error => res.send(error));
+                        .catch(error => res.json({ error: `${error}` }));
                 } else if (vote == "d" || vote == "D") {
                     Vote.findOne({
                         where: {
-                            $and: [
-                                { posted_by: req.user.id },
-                                { posted_for: commentID }
-                            ]
+                            voted_by: req.user.id,
+                            voted_for: commentID
                         }
                     })
-                        .then(result => {
-                            if (!result) {
+                        .then(vote => {
+                            if (!vote) {
                                 Comment.update(
                                     { downvotes: result.downvotes + 1 },
                                     { where: { id: commentID } }
                                 )
-                                    .then(result => {
+                                    .then(downvoted => {
                                         Vote.create({
                                             upvote: 0,
                                             downvote: 1,
                                             voted_by: req.user.id,
                                             voted_for: commentID
                                         })
-                                            .then(result =>
+                                            .then(downvote =>
                                                 res.json({
                                                     message: "Downvoted!"
                                                 })
@@ -73,7 +69,7 @@ module.exports.postVote = (req, res) => {
                                     })
                                     .catch(error => res.send(error));
                             } else {
-                                res.json({ message: "Already Downvoted!" });
+                                res.json({ message: "Already Voted!" });
                             }
                         })
                         .catch(error => res.send(error));

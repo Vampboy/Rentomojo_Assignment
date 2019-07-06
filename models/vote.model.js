@@ -10,11 +10,11 @@ const Vote = sequelize.define("vote", {
         primaryKey: true
     },
     upvote: {
-        type: Sequelize.ENUM(0, 1),
+        type: Sequelize.ENUM("0", "1"),
         allowNull: false
     },
     downvote: {
-        type: Sequelize.ENUM(0, 1),
+        type: Sequelize.ENUM("0", "1"),
         allowNull: false
     },
     voted_by: {

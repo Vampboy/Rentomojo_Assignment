@@ -20,16 +20,18 @@ module.exports.postSignup = (req, res) => {
                             password: hashedPassword
                         })
                             .then(result =>
-                                console.log("Successfully Created a new User!")
+                                res.json({
+                                    message: "Successfully Created a new User!"
+                                })
                             )
-                            .catch(error => console.log(error));
+                            .catch(error => res.send(error));
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => res.send(error));
             } else {
-                console.log("User already Exists!");
+                res.json({ message: "User already Exists!" });
             }
         })
-        .catch(error => console.error(error));
+        .catch(error => res.send(error));
 };
 
 module.exports.getLogin = (req, res) => {};
@@ -43,15 +45,16 @@ module.exports.postLogin = (req, res) => {
                     .compare(password, result.password)
                     .then(matched => {
                         if (matched) {
-                            console.log("Logged In!");
+                            req.session.userID = result.id;
+                            res.json({ message: "Logged In!" });
                         } else {
-                            console.log("Password doesn't match!");
+                            res.json({ message: "Password doesn't match!" });
                         }
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => res.send(error));
             } else {
-                console.log("User not Found!");
+                res.json({ message: "User not Found!" });
             }
         })
-        .catch(error => console.error(error));
+        .catch(error => res.send(error));
 };
